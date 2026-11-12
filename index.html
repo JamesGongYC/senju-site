@@ -3,104 +3,194 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Senju 千手: agents get their own cursors, you keep yours</title>
-<meta name="description" content="Senju puts a team of AI agents to work in your browser and Mac apps, each with its own visible cursor, while your mouse and keyboard stay yours.">
+<title>Senju 千手: a thousand hands on your desktop</title>
+<meta name="description" content="Senju is a swarm of computer-use agents for the Mac. Each agent has a cursor you can watch, interrupt and redirect. Sessions span teammates' computers, and every job leaves a skill behind.">
+<meta name="theme-color" content="#000000">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="top">
   <a class="brand" href="#" aria-label="Senju, home">
-    <img src="icon.svg" alt="" width="34" height="34">
+    <svg viewBox="0 0 240 240" width="30" height="30" aria-hidden="true"><use href="#mark"/></svg>
     <span>Senju <span class="hanzi" lang="zh-Hans" aria-hidden="true">千手</span></span>
   </a>
   <nav aria-label="Sections">
-    <a href="#what">What it does</a>
-    <a href="#teams">Teams</a>
-    <a href="#install">Install</a>
+    <a href="#swarm">Swarm</a>
+    <a href="#multiplayer">Multiplayer</a>
+    <a href="#loop">Self-improvement</a>
+    <a class="get" href="#install">Download</a>
   </nav>
 </header>
 
 <main>
-  <section class="hero">
+  <section class="hero" id="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="you-tag" id="you-tag" aria-hidden="true">you</div>
     <div class="hero-copy">
-      <h1><span>Agents get their own cursors.</span> <span>You keep yours.</span></h1>
-      <p class="lede">Senju puts a team of AI agents to work in your browser and your Mac apps. Each one has a cursor you can watch. Your mouse and keyboard stay yours the whole time.</p>
-      <div class="get">
+      <h1><span>A thousand hands</span> <span>on your desktop.</span></h1>
+      <p class="abstract">Senju <span lang="zh-Hans">千手</span> is a swarm of computer-use agents for the Mac. Each agent has its own cursor, working in your real apps while you keep working in yours. You can interrupt any of them, share a session across your team's computers, and every finished job is written up as a skill the next one starts from.</p>
+      <div class="cta">
         <a class="download" href="downloads/Senju-0.1.0-arm64.dmg" download>Download for Mac</a>
-        <p class="fine">Version 0.1 for Apple silicon, macOS 13 or later. <a href="downloads/Senju-0.1.0-x64.dmg" download>Intel Mac instead</a></p>
+        <span class="fine">Version 0.1, a research preview. Apple silicon, macOS 13 or later. <a href="downloads/Senju-0.1.0-x64.dmg" download>Intel build</a></span>
       </div>
     </div>
-
-    <!-- The desktop: three agents at work, and you. Move your pointer over it. -->
-    <div class="stage" id="stage" role="img" aria-label="A desktop where three agent cursors named Research, Writer and Courier each work in their own window, while your own blue cursor works in a fourth.">
-      <div class="bar"><span class="pulse"></span><span class="typed">Compare three laptops, draft the email, and file the notes</span></div>
-
-      <div class="win w1"><div class="title"><i></i><i></i><i></i><b>Chrome</b></div><div class="lines"><s></s><s></s><s></s><s></s></div></div>
-      <div class="win w2"><div class="title"><i></i><i></i><i></i><b>Word</b></div><div class="lines"><s></s><s></s><s></s><s></s><s></s></div></div>
-      <div class="win w3"><div class="title"><i></i><i></i><i></i><b>Slack</b></div><div class="lines"><s></s><s></s><s></s></div>
-        <div class="ask"><b>Courier needs you</b><span>Send this message to the team?</span><em>Send</em></div>
-      </div>
-      <div class="win w4 mine"><div class="title"><i></i><i></i><i></i><b>Your work</b></div><div class="lines"><s></s><s></s><s></s><s></s></div></div>
-
-      <div class="ghost g1"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Research</span></div>
-      <div class="ghost g2"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Writer</span></div>
-      <div class="ghost g3"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div>
-      <div class="you" id="you"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>You</span></div>
-    </div>
+    <p class="figcap hero-cap"><b id="count">1,000</b> cursors. Move through them. Click anywhere to regroup them.</p>
   </section>
 
-  <section class="what" id="what">
-    <h2>What the agents do, and what stays yours</h2>
+  <section class="point" id="swarm">
+    <div class="copy">
+      <h2>A swarm you can interrupt.</h2>
+      <p>Most computer-use agents run out of sight and hand back a result. Senju's agents work in front of you, in your own browser and Mac apps, and they stay answerable the whole time.</p>
+      <ul>
+        <li>Write to the lead or to any worker while it works. It replans.</li>
+        <li>Pause an agent, take over its window, hand it back.</li>
+        <li>Agents hold their next action while you are typing.</li>
+        <li>Sign-ins and anything sent in your name wait for your click.</li>
+      </ul>
+    </div>
+    <figure class="fig" id="fig-swarm">
+      <div class="desk" id="desk">
+        <div class="promptbar"><i></i><span>Compare three laptops, draft the email, file the notes</span></div>
+        <div class="wins">
+          <div class="win" data-win="chrome"><div class="wt">Chrome</div><div class="lines"><s></s><s></s><s></s><s></s></div></div>
+          <div class="win" data-win="word"><div class="wt">Word</div><div class="lines"><s></s><s></s><s></s></div></div>
+          <div class="win" data-win="slack"><div class="wt">Slack</div><div class="lines"><s></s><s></s></div>
+            <div class="ask" id="ask" hidden>
+              <b>Courier needs you</b>
+              <span>Send this draft to the team channel?</span>
+              <div><button type="button" data-ask="send">Send</button><button type="button" data-ask="hold">Not yet</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="agents" id="agents" aria-hidden="true"></div>
+      </div>
+      <div class="controls" role="group" aria-label="Try the swarm">
+        <button type="button" data-act="pause" aria-pressed="false">Pause Writer</button>
+        <button type="button" data-act="skip">Tell the lead: skip the email</button>
+        <button type="button" data-act="add">Tell the lead: check prices too</button>
+        <button type="button" data-act="reset" class="quiet">Start over</button>
+      </div>
+      <p class="lead-line" id="lead-line" aria-live="polite"><b>Lead</b> <span>Three workers running. Rest your pointer on a window and the agent in it waits for you.</span></p>
+      <figcaption class="figcap"><b>Fig. 1</b> A working model of a session. Every control here exists in the app.</figcaption>
+    </figure>
+  </section>
+
+  <section class="point flip" id="multiplayer">
+    <div class="copy">
+      <h2>One swarm, several desks.</h2>
+      <p>In a team, one agent can read something on your Mac and write it on a teammate's. While it rests, its cursor is docked on every screen. When someone calls it, it goes to that screen and leaves the others.</p>
+      <ul>
+        <li>Nobody's Mac is used until its owner allows it, each session.</li>
+        <li>Everyone can talk to the lead. Every message carries a name.</li>
+        <li>A request at someone's computer is shown to that person only.</li>
+        <li>What the team learns is remembered with who it came from.</li>
+      </ul>
+    </div>
+    <figure class="fig" id="fig-multi">
+      <div class="screens">
+        <div class="screen" data-screen="you">
+          <div class="st">Your Mac</div>
+          <div class="sbody"><div class="note" data-note="you"></div></div>
+          <div class="dock"><span class="docked" data-docked="you"></span></div>
+          <button type="button" data-call="you">Call Courier here</button>
+        </div>
+        <div class="screen" data-screen="mina">
+          <div class="st">Mina's Mac</div>
+          <div class="sbody">
+            <div class="consent" id="consent">
+              <b>You asked to use this Mac</b>
+              <span>Copy the meeting notes into the team doc</span>
+              <div><button type="button" data-consent="allow">Allow</button><button type="button" data-consent="watch">Just watch</button></div>
+            </div>
+            <div class="note" data-note="mina"></div>
+          </div>
+          <div class="dock"><span class="docked" data-docked="mina"></span></div>
+          <button type="button" data-call="mina" disabled>Call Courier here</button>
+        </div>
+        <div class="courier" id="courier" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div>
+      </div>
+      <p class="lead-line" id="multi-line" aria-live="polite"><b>Lead</b> <span>Waiting for Mina. Answer the card on her screen for her.</span></p>
+      <figcaption class="figcap"><b>Fig. 2</b> Consent, docking and calling, as two teammates see them.</figcaption>
+    </figure>
+  </section>
+
+  <section class="loop" id="loop">
+    <div class="copy">
+      <h2>Every job leaves a skill behind.</h2>
+      <p>When a job ends, the lead writes a short retrospective and saves what it learned as a skill: a plain Markdown file you can read, edit or delete. The next job that resembles it starts from that file. In a team, skills are shared and every revision is kept.</p>
+    </div>
+    <figure class="fig" id="fig-loop">
+      <div class="loopgrid">
+        <div class="ring" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="78" class="track"/>
+            <circle cx="100" cy="100" r="78" class="arc" id="arc"/>
+            <g id="runner"><circle cx="100" cy="22" r="7"/></g>
+          </svg>
+          <ol>
+            <li data-phase="0">Run</li>
+            <li data-phase="1">Report</li>
+            <li data-phase="2">Retrospective</li>
+            <li data-phase="3">Skill</li>
+          </ol>
+        </div>
+        <div class="runs">
+          <div class="trace" id="trace" aria-live="polite"></div>
+          <div class="skill">
+            <div class="sk-head"><span>skills/compare-and-brief.md</span><b id="rev">no revisions yet</b></div>
+            <ul id="skill-lines"></ul>
+          </div>
+          <button type="button" id="run">Run the job</button>
+        </div>
+      </div>
+      <figcaption class="figcap"><b>Fig. 3</b> The mechanism, drawn schematically. Solid marks are useful steps, hollow marks are dead ends. Not a measurement.</figcaption>
+    </figure>
+  </section>
+
+  <section class="system" id="system">
+    <h2>The system</h2>
     <dl>
-      <div><dt>They split the job</dt><dd>A lead agent plans the work, starts as many workers as it needs, and changes the plan when a result or a message from you calls for it.</dd></div>
-      <div><dt>They use your real apps</dt><dd>Each browser agent gets its own Chrome window. Others work in Mac apps such as Word, Slack and Cursor, in the background, with windows arranged so nothing overlaps.</dd></div>
-      <div><dt>They ask before acting as you</dt><dd>Sign-ins, anything sent in your name, and steps only you can do arrive as a card on the window that needs you. Nothing is sent until you click.</dd></div>
-      <div><dt>They wait while you type</dt><dd>An agent holds its next action until you pause. You can also pause any agent, take over its window, and hand it back.</dd></div>
-      <div><dt>They get better at your work</dt><dd>After each job the lead writes down what it learned as a skill, a plain file you can read, edit or delete. The next job starts from it.</dd></div>
+      <div><dt>Lead</dt><dd>Plans the job, starts workers, reads their reports and replans. Messages from you come first.</dd></div>
+      <div><dt>Workers</dt><dd>One per subtask, each with its own cursor and window. They share a board, wait on each other, and hand off to you.</dd></div>
+      <div><dt>Tools</dt><dd>Agents act through MCP servers: a Chrome window per browser agent, a files folder, and a driver for native Mac apps.</dd></div>
+      <div><dt>Memory</dt><dd>Skills, plus notes about how you and your team like things done, each recorded with the person it came from.</dd></div>
     </dl>
   </section>
 
-  <section class="teams" id="teams">
-    <div class="teams-copy">
-      <h2>One agent, two desks</h2>
-      <p>In a team, an agent can read something on your Mac and write it on a teammate's. While it rests, its cursor sits on both screens. When one of you calls it, it goes to that screen and leaves the other.</p>
-      <ul>
-        <li>A teammate's session cannot use your Mac until you allow it, each time.</li>
-        <li>Everyone can talk to the lead, and every message carries a name.</li>
-        <li>What the team learns is remembered with the person it came from.</li>
-      </ul>
-    </div>
-    <div class="desks" aria-hidden="true">
-      <figure class="desk d1"><div class="screen"><div class="ghost dock"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div></div><figcaption>Your Mac</figcaption></figure>
-      <figure class="desk d2"><div class="screen"><div class="ghost dock"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div></div><figcaption>Linda's Mac</figcaption></figure>
-    </div>
-  </section>
-
   <section class="install" id="install">
-    <h2>Install it</h2>
+    <h2>Install</h2>
     <ol>
       <li><b>Download the app and drag it to Applications.</b> <a href="downloads/Senju-0.1.0-arm64.dmg" download>Apple silicon</a> or <a href="downloads/Senju-0.1.0-x64.dmg" download>Intel</a>.</li>
-      <li><b>Open it the first time from System Settings.</b> This early build is not yet notarized by Apple, so macOS will stop it once. Go to Privacy &amp; Security and choose Open Anyway.</li>
-      <li><b>Add your Anthropic API key.</b> The app asks for it the first time you run a job. Agents run on your own key, which stays on your Mac.</li>
+      <li><b>Open it the first time from System Settings.</b> This build is not yet notarized by Apple, so macOS stops it once. Go to Privacy &amp; Security and choose Open Anyway.</li>
+      <li><b>Add your Anthropic API key.</b> The app asks the first time you run a job. Agents run on your own key, which stays on your Mac.</li>
       <li><b>Press Command Shift Space and say what you want done.</b> The same keys hide the bar and bring it back.</li>
     </ol>
     <aside>
-      <h3>Before you install</h3>
-      <p>This is an early version. Agents act inside your own accounts, and they will make mistakes. Start with jobs you can check, keep an eye on the cards, and expect each job to cost API credit.</p>
-      <p>Browser agents need Google Chrome. Controlling other Mac apps needs one extra component, which the app explains when you first ask for it.</p>
+      <h3>Known limits</h3>
+      <ul>
+        <li>Agents act inside your own accounts and they make mistakes. Start with jobs you can check.</li>
+        <li>The rules agents follow are instructions to a model, not hard locks.</li>
+        <li>Each job spends API credit on your key.</li>
+        <li>Browser agents need Google Chrome. Native Mac apps need one extra component, which the app explains when you first ask for it.</li>
+        <li>Team mode needs a server you run yourself.</li>
+      </ul>
     </aside>
   </section>
 </main>
 
 <footer>
   <span>Senju 0.1. The name is <span lang="zh-Hans">千手</span>, "a thousand hands".</span>
-  <a href="#install">Install</a>
+  <a href="#hero">Back to the top</a>
 </footer>
+
+<!-- The mark: one cursor in front, and the tips of more cursors fanned out behind it. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 240 240"><g transform="translate(98 28) scale(9.6)"><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(-72 3.5 11)" fill="#22A00D" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(72 3.5 11)" fill="#22A00D" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(-48 3.5 11)" fill="#2ED312" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(48 3.5 11)" fill="#2ED312" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(-24 3.5 11)" fill="#39FF14" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(24 3.5 11)" fill="#39FF14" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 17 L4.6 12.9 L7.6 19.6 L10.3 18.4 L7.3 11.9 L13 11.9 Z" fill="#fff" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/></g></symbol>
+</svg>
 
 <script src="site.js"></script>
 </body>
