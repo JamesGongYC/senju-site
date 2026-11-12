@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Senju 千手: agents get their own cursors, you keep yours</title>
+<meta name="description" content="Senju puts a team of AI agents to work in your browser and Mac apps, each with its own visible cursor, while your mouse and keyboard stay yours.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#" aria-label="Senju, home">
+    <img src="icon.svg" alt="" width="34" height="34">
+    <span>Senju <span class="hanzi" lang="zh-Hans" aria-hidden="true">千手</span></span>
+  </a>
+  <nav aria-label="Sections">
+    <a href="#what">What it does</a>
+    <a href="#teams">Teams</a>
+    <a href="#install">Install</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <h1><span>Agents get their own cursors.</span> <span>You keep yours.</span></h1>
+      <p class="lede">Senju puts a team of AI agents to work in your browser and your Mac apps. Each one has a cursor you can watch. Your mouse and keyboard stay yours the whole time.</p>
+      <div class="get">
+        <a class="download" href="downloads/Senju-0.1.0-arm64.dmg" download>Download for Mac</a>
+        <p class="fine">Version 0.1 for Apple silicon, macOS 13 or later. <a href="downloads/Senju-0.1.0-x64.dmg" download>Intel Mac instead</a></p>
+      </div>
+    </div>
+
+    <!-- The desktop: three agents at work, and you. Move your pointer over it. -->
+    <div class="stage" id="stage" role="img" aria-label="A desktop where three agent cursors named Research, Writer and Courier each work in their own window, while your own blue cursor works in a fourth.">
+      <div class="bar"><span class="pulse"></span><span class="typed">Compare three laptops, draft the email, and file the notes</span></div>
+
+      <div class="win w1"><div class="title"><i></i><i></i><i></i><b>Chrome</b></div><div class="lines"><s></s><s></s><s></s><s></s></div></div>
+      <div class="win w2"><div class="title"><i></i><i></i><i></i><b>Word</b></div><div class="lines"><s></s><s></s><s></s><s></s><s></s></div></div>
+      <div class="win w3"><div class="title"><i></i><i></i><i></i><b>Slack</b></div><div class="lines"><s></s><s></s><s></s></div>
+        <div class="ask"><b>Courier needs you</b><span>Send this message to the team?</span><em>Send</em></div>
+      </div>
+      <div class="win w4 mine"><div class="title"><i></i><i></i><i></i><b>Your work</b></div><div class="lines"><s></s><s></s><s></s><s></s></div></div>
+
+      <div class="ghost g1"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Research</span></div>
+      <div class="ghost g2"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Writer</span></div>
+      <div class="ghost g3"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div>
+      <div class="you" id="you"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>You</span></div>
+    </div>
+  </section>
+
+  <section class="what" id="what">
+    <h2>What the agents do, and what stays yours</h2>
+    <dl>
+      <div><dt>They split the job</dt><dd>A lead agent plans the work, starts as many workers as it needs, and changes the plan when a result or a message from you calls for it.</dd></div>
+      <div><dt>They use your real apps</dt><dd>Each browser agent gets its own Chrome window. Others work in Mac apps such as Word, Slack and Cursor, in the background, with windows arranged so nothing overlaps.</dd></div>
+      <div><dt>They ask before acting as you</dt><dd>Sign-ins, anything sent in your name, and steps only you can do arrive as a card on the window that needs you. Nothing is sent until you click.</dd></div>
+      <div><dt>They wait while you type</dt><dd>An agent holds its next action until you pause. You can also pause any agent, take over its window, and hand it back.</dd></div>
+      <div><dt>They get better at your work</dt><dd>After each job the lead writes down what it learned as a skill, a plain file you can read, edit or delete. The next job starts from it.</dd></div>
+    </dl>
+  </section>
+
+  <section class="teams" id="teams">
+    <div class="teams-copy">
+      <h2>One agent, two desks</h2>
+      <p>In a team, an agent can read something on your Mac and write it on a teammate's. While it rests, its cursor sits on both screens. When one of you calls it, it goes to that screen and leaves the other.</p>
+      <ul>
+        <li>A teammate's session cannot use your Mac until you allow it, each time.</li>
+        <li>Everyone can talk to the lead, and every message carries a name.</li>
+        <li>What the team learns is remembered with the person it came from.</li>
+      </ul>
+    </div>
+    <div class="desks" aria-hidden="true">
+      <figure class="desk d1"><div class="screen"><div class="ghost dock"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div></div><figcaption>Your Mac</figcaption></figure>
+      <figure class="desk d2"><div class="screen"><div class="ghost dock"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div></div><figcaption>Linda's Mac</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="install" id="install">
+    <h2>Install it</h2>
+    <ol>
+      <li><b>Download the app and drag it to Applications.</b> <a href="downloads/Senju-0.1.0-arm64.dmg" download>Apple silicon</a> or <a href="downloads/Senju-0.1.0-x64.dmg" download>Intel</a>.</li>
+      <li><b>Open it the first time from System Settings.</b> This early build is not yet notarized by Apple, so macOS will stop it once. Go to Privacy &amp; Security and choose Open Anyway.</li>
+      <li><b>Add your Anthropic API key.</b> The app asks for it the first time you run a job. Agents run on your own key, which stays on your Mac.</li>
+      <li><b>Press Command Shift Space and say what you want done.</b> The same keys hide the bar and bring it back.</li>
+    </ol>
+    <aside>
+      <h3>Before you install</h3>
+      <p>This is an early version. Agents act inside your own accounts, and they will make mistakes. Start with jobs you can check, keep an eye on the cards, and expect each job to cost API credit.</p>
+      <p>Browser agents need Google Chrome. Controlling other Mac apps needs one extra component, which the app explains when you first ask for it.</p>
+    </aside>
+  </section>
+</main>
+
+<footer>
+  <span>Senju 0.1. The name is <span lang="zh-Hans">千手</span>, "a thousand hands".</span>
+  <a href="#install">Install</a>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
