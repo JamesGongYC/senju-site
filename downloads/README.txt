@@ -1,6 +1,2 @@
-Put the installers here. From the senju project, run:
-
-    npm run release
-
-It builds Senju-<version>-arm64.dmg and -x64.dmg and copies them into this folder.
-The download buttons on the page link to those two file names.
+Installers are no longer kept here.
+They are published as a GitHub Release; see README.md in this folder.
