@@ -42,7 +42,13 @@ const rand = (a, b) => a + Math.random() * (b - a);
   const shapes = [
     (x, w, h) => { x.font = `900 ${h * 0.86}px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('千手', w / 2, h * 0.53); },
     (x, w, h) => { x.translate(w / 2 - h * 0.36, h * 0.04); x.scale(h / 21, h / 21); x.fill(new Path2D('M0 0 L0 17 L4.6 12.9 L7.6 19.6 L10.3 18.4 L7.3 11.9 L13 11.9 Z')); },
-    (x, w, h) => { x.font = `900 ${h * 0.6}px Archivo, "Helvetica Neue", Arial, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('SENJU', w / 2, h * 0.55); },
+    (x, w, h) => {
+      // Size the word to the box, whatever the font's width turns out to be.
+      const face = 'Archivo, "Helvetica Neue", Arial, sans-serif';
+      x.font = `900 100px ${face}`;
+      const size = Math.min(h * 0.62, (100 * w * 0.94) / x.measureText('SENJU').width);
+      x.font = `900 ${size}px ${face}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('SENJU', w / 2, h * 0.52);
+    },
   ];
 
   // Where the formation sits: upper right on wide screens, top on narrow ones.
@@ -62,7 +68,6 @@ const rand = (a, b) => a + Math.random() * (b - a);
     const want = W > 900 ? 1000 : W > 560 ? 640 : 420;
     if (want !== N) {
       N = want;
-      $('#count').textContent = N.toLocaleString('en-US');
       P = Array.from({ length: N }, (_, i) => {
         const edge = Math.random() * 4 | 0;   // fly in from the edges
         const x = edge === 0 ? -40 : edge === 1 ? W + 40 : rand(0, W), y = edge === 2 ? -40 : edge === 3 ? H + 40 : rand(0, H);
