@@ -185,6 +185,33 @@ h3 { margin: 0 0 10px; font-size: 21px; line-height: 1.2; font-weight: 700; font
 #run { background: var(--neon); border-color: var(--neon); color: var(--black); font-size: 15px; padding: 10px 18px; }
 #run:hover:not(:disabled) { background: var(--white); border-color: var(--white); color: var(--black); }
 
+/* Fig. 4: the autoresearch ledger */
+.research { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 80px); align-items: start; border-top: 1px solid var(--line); padding-top: clamp(28px, 5vw, 56px); }
+.research-copy h3 { font-size: clamp(24px, 2.6vw, 36px); font-weight: 800; font-variation-settings: "wdth" 120; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 16px; text-wrap: balance; }
+.research-copy p { color: var(--dim); max-width: 54ch; margin: 0 0 22px; }
+.research-copy ul { list-style: none; margin: 0; padding: 0; max-width: 54ch; }
+.research-copy li { padding: 11px 0 11px 26px; border-top: 1px solid var(--line); position: relative; font-size: 16px; }
+.research-copy li::before { content: ""; position: absolute; left: 0; top: 19px; width: 12px; height: 2px; background: var(--neon); }
+.ledger { border: 1px solid var(--line); border-radius: 10px; background: #050505; padding: 0 16px 16px; }
+.lg-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--dim); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.lg-head b { color: var(--neon); font-weight: 600; font-family: var(--font); font-variation-settings: "wdth" 78; }
+.gens { min-height: 300px; }
+.gen { display: grid; grid-template-columns: 2.4em auto 3em minmax(0, 1fr) auto; align-items: center; gap: 6px 14px; padding: 12px 0; border-bottom: 1px solid var(--line); animation: pop 0.2s both; }
+.gen > b { font-size: 13px; font-variation-settings: "wdth" 78; color: var(--dim); }
+.gen .runs6 { display: flex; gap: 4px; }
+.gen .runs6 i { width: 13px; height: 13px; border-radius: 2px; outline: 1.5px solid var(--faint); outline-offset: -1.5px; }
+.gen .runs6 i.pass { background: var(--white); outline: 0; }
+.gen.kept .runs6 i.pass { background: var(--neon); }
+.gen .score { font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 80; }
+.gen .change { font-size: 14px; color: var(--dim); min-width: 0; }
+.gen .verdict { justify-self: end; font-size: 12px; font-weight: 700; font-variation-settings: "wdth" 80; padding: 2px 7px; border-radius: 3px; border: 1px solid var(--faint); color: var(--dim); white-space: nowrap; }
+.gen.kept .verdict { background: var(--neon); border-color: var(--neon); color: var(--black); }
+.gen.reverted .change { text-decoration: line-through; text-decoration-color: var(--faint); }
+.gen.check { grid-template-columns: 2.4em auto minmax(0, 1fr) auto; }
+.gen.check .runs6 i.pass { background: var(--neon); }
+#gen-run { background: var(--neon); border-color: var(--neon); color: var(--black); font-size: 15px; padding: 10px 18px; }
+#gen-run:hover:not(:disabled) { background: var(--white); border-color: var(--white); color: var(--black); }
+
 /* ---- System, install ---- */
 .system dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: clamp(24px, 4vw, 48px) 0 0; border-top: 1px solid var(--line); }
 .system dl div { padding: 20px 22px 6px 0; border-right: 1px solid var(--line); margin-right: 22px; }
@@ -206,7 +233,7 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10
 
 /* ---- Small screens ---- */
 @media (max-width: 900px) {
-  .point, .point.flip, .install, .term, .cmd-groups { grid-template-columns: minmax(0, 1fr); }
+  .point, .point.flip, .install, .term, .cmd-groups, .research { grid-template-columns: minmax(0, 1fr); }
   .point.flip .copy { order: 0; }
   .copy { position: static; }
   .loopgrid { grid-template-columns: minmax(0, 1fr); }
@@ -222,6 +249,9 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10
   .pane { min-height: 0; }
   .pane.tty { min-height: 300px; }
   .cmds dl div { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+  .gen, .gen.check { grid-template-columns: 2.4em auto 1fr auto; }
+  .gen .change { grid-column: 1 / -1; order: 5; }
+  .gen.check .verdict { grid-column: 4; }
   h1 { font-variation-settings: "wdth" 100; animation: none; }
   .wins { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .win { min-height: 190px; }
@@ -234,6 +264,6 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10
   h1 { animation: none; }
   .agent, .pointer, #runner, .ring .arc, .download { transition: none; }
   #tty .caret { animation: none; }
-  .trace i { animation: none; }
+  .trace i, .gen { animation: none; }
 }
 @media (max-width: 620px) { .agent span { max-width: 128px; overflow: hidden; text-overflow: ellipsis; } }

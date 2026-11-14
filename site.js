@@ -347,3 +347,45 @@ const rand = (a, b) => a + Math.random() * (b - a);
   btn.addEventListener('click', run);
   phase(-1);
 })();
+
+// ---- Fig. 4: autoresearch. One generation per click: six runs, a score, keep or revert ----
+(function research() {
+  const gens = $('#gens'), btn = $('#gen-run'), champ = $('#champ'), line = $('#gen-line span');
+  if (!gens) return;
+  // Illustrative, not measured. runs: 1 = passed. kind: train generations, or a check on variants nobody trained on.
+  const GENS = [
+    { runs: '010000', score: '0.35', verdict: 'baseline', change: 'Empty skill.', say: 'Most runs stop at the same milestone: the receipt totals are never read. Next change: a step that says to read them first.' },
+    { runs: '101100', score: '0.58', verdict: 'keep', change: 'Read every receipt total before filling the form.', say: 'Score up, so the change stays and this generation is the new champion. The failures now quit before the last page.' },
+    { runs: '100100', score: '0.52', verdict: 'revert', change: 'Ask for approval after each line.', say: 'Score down. The skill is restored from the champion, and the idea is logged so it is not tried again.' },
+    { runs: '111101', score: '0.86', verdict: 'keep', change: 'Add one shortened winning run as an example.', say: 'Five of six passed, which earns a check on variants the researcher has never read.' },
+    { check: true, runs: '111110', verdict: 'ready', change: 'Unseen variants, first check.', say: 'Ready once. A second ready check in a row is needed before the skill ships.' },
+    { check: true, runs: '111111', verdict: 'ready', change: 'Unseen variants, second check.', say: 'Ready twice in a row. The skill is exported into the app as expense-report.md.' },
+  ];
+  let n = 0, g = 0, busy = false;
+  const wait = (ms) => new Promise((r) => setTimeout(r, still ? Math.min(ms, 40) : ms));
+  async function run() {
+    if (busy) return;
+    busy = true; btn.disabled = true;
+    if (n === GENS.length) { n = 0; g = 0; gens.innerHTML = ''; champ.textContent = 'no champion yet'; }
+    const s = GENS[n];
+    const row = document.createElement('div');
+    row.className = 'gen' + (s.check ? ' check' : '');
+    row.innerHTML = `<b>${s.check ? 'test' : 'g' + g}</b><div class="runs6"></div>${s.check ? '' : '<span class="score"></span>'}<span class="change"></span><span class="verdict">running</span>`;
+    $('.change', row).textContent = s.change;
+    gens.append(row);
+    for (const c of s.runs) { const i = document.createElement('i'); if (c === '1') i.className = 'pass'; $('.runs6', row).append(i); await wait(170); }
+    await wait(250);
+    if (!s.check) $('.score', row).textContent = s.score;
+    $('.verdict', row).textContent = s.verdict;
+    if (s.verdict === 'keep' || s.verdict === 'ready') row.classList.add('kept');
+    if (s.verdict === 'revert') row.classList.add('reverted');
+    if (s.verdict === 'keep' || s.verdict === 'baseline') champ.textContent = `champion: g${g}, score ${s.score}`;
+    if (n === GENS.length - 1) champ.textContent = 'ready, exported to the app';
+    line.textContent = s.say;
+    if (!s.check) g++;
+    n++;
+    btn.textContent = n === GENS.length ? 'Clear and start over' : GENS[n].check ? 'Check on unseen variants' : 'Run the next generation';
+    busy = false; btn.disabled = false;
+  }
+  btn.addEventListener('click', run);
+})();

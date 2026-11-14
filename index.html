@@ -203,6 +203,32 @@
       </div>
       <figcaption class="figcap"><b>Fig. 3</b> The mechanism, drawn schematically. Solid marks are useful steps, hollow marks are dead ends. Not a measurement.</figcaption>
     </figure>
+
+    <div class="research" id="autoresearch">
+      <div class="research-copy">
+        <h3>Autoresearch teaches one task at a time.</h3>
+        <p>Ripple's weights never change. What improves is the skill it reads. In the repo, the same loop runs on purpose and unattended: a researcher agent runs a task, reads where Ripple went wrong, and edits that task's skill.</p>
+        <ul>
+          <li>A generation is six runs of one task, each on a fresh variant with different names, amounts and row order.</li>
+          <li>Milestones give partial credit, so a run that gets halfway still tells the researcher something.</li>
+          <li>The researcher opens the failing transcripts, finds the first wrong move, and changes one thing in the skill.</li>
+          <li>The change is kept if the score rises. Otherwise the skill is restored from the last version that won.</li>
+          <li>A fixed set of variants the researcher never reads decides when a skill is ready: five of six, twice in a row.</li>
+          <li>A ready skill is exported into the app as the same Markdown file a finished job would have left.</li>
+        </ul>
+      </div>
+      <figure class="fig" id="fig-research">
+        <div class="ledger">
+          <div class="lg-head"><span>skills/expense-report/SKILL.md</span><b id="champ">no champion yet</b></div>
+          <div class="gens" id="gens" aria-live="polite"></div>
+          <div class="controls">
+            <button type="button" id="gen-run">Run a generation</button>
+          </div>
+        </div>
+        <p class="lead-line" id="gen-line"><b>Researcher</b> <span>Nothing has run. The first generation is the baseline, with an empty skill.</span></p>
+        <figcaption class="figcap"><b>Fig. 4</b> How the ledger fills in, one row per generation. Filled squares are runs that passed. The numbers are illustrative, not results.</figcaption>
+      </figure>
+    </div>
   </section>
 
 
