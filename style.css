@@ -84,35 +84,68 @@ button.quiet { border-color: transparent; color: var(--dim); }
 .lines s { display: block; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.13); margin-bottom: 9px; }
 .lines s:nth-child(2) { width: 72%; } .lines s:nth-child(3) { width: 88%; } .lines s:nth-child(4) { width: 55%; }
 .ask { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 4; background: var(--white); color: var(--black); border-radius: 6px; padding: 10px; font-size: 13px; line-height: 1.3; }
-.ask b, .consent b { display: block; margin-bottom: 3px; }
-.ask span, .consent span { display: block; margin-bottom: 8px; }
-.ask div, .consent div { display: flex; gap: 6px; flex-wrap: wrap; }
-.ask button, .consent button { color: var(--black); border-color: var(--black); padding: 5px 10px; font-size: 13px; }
-.ask button:first-child, .consent button:first-child { background: var(--black); color: var(--neon); }
-.ask button:hover, .consent button:hover { background: var(--neon) !important; color: var(--black) !important; border-color: var(--black) !important; }
+.ask b { display: block; margin-bottom: 3px; }
+.ask span { display: block; margin-bottom: 8px; }
+.ask div { display: flex; gap: 6px; flex-wrap: wrap; }
+.ask button { color: var(--black); border-color: var(--black); padding: 5px 10px; font-size: 13px; }
+.ask button:first-child { background: var(--black); color: var(--neon); }
+.ask button:hover { background: var(--neon) !important; color: var(--black) !important; border-color: var(--black) !important; }
 .agents { position: absolute; inset: 0; pointer-events: none; }
 .agent { position: absolute; left: 0; top: 0; display: flex; align-items: flex-start; gap: 2px; transition: transform 1.1s cubic-bezier(0.3, 0.7, 0.2, 1), opacity 0.4s; will-change: transform; }
-.agent svg, .courier svg { width: 20px; height: 20px; flex: none; fill: var(--neon); stroke: var(--black); stroke-width: 1.2; stroke-linejoin: round; filter: drop-shadow(0 0 6px rgba(57, 255, 20, 0.6)); }
-.agent span, .courier span { margin-top: 13px; background: var(--neon); color: var(--black); font-size: 11.5px; font-weight: 700; font-variation-settings: "wdth" 80; line-height: 1.25; padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
+.agent svg, .pointer svg { width: 20px; height: 20px; flex: none; fill: var(--neon); stroke: var(--black); stroke-width: 1.2; stroke-linejoin: round; filter: drop-shadow(0 0 6px rgba(57, 255, 20, 0.6)); }
+.agent span, .pointer span { margin-top: 13px; background: var(--neon); color: var(--black); font-size: 11.5px; font-weight: 700; font-variation-settings: "wdth" 80; line-height: 1.25; padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
 .agent.held svg { fill: var(--black); stroke: var(--neon); filter: none; }
 .agent.held span { background: var(--black); color: var(--neon); outline: 1px solid var(--neon); }
 .agent.gone { opacity: 0; }
 
-/* Fig. 2: two screens */
-.screens { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.screen { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 0 12px 12px; background: #050505; display: flex; flex-direction: column; min-height: clamp(300px, 34vw, 400px); transition: border-color 0.2s; }
-.screen.live { border-color: var(--neon); }
-.st { font-size: 13px; font-variation-settings: "wdth" 78; color: var(--dim); padding: 9px 0; border-bottom: 1px solid var(--line); }
-.sbody { position: relative; flex: 1; padding-top: 12px; }
-.consent { background: var(--white); color: var(--black); border-radius: 6px; padding: 10px; font-size: 13px; line-height: 1.3; }
-.note { color: var(--dim); font-size: 13.5px; font-variation-settings: "wdth" 82; }
-.note b { color: var(--white); }
-.dock { height: 34px; border-top: 1px dashed var(--line); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-.docked { font-size: 12px; font-variation-settings: "wdth" 78; color: var(--faint); }
-.screen > button { align-self: stretch; }
-.courier { position: absolute; left: 0; top: 0; z-index: 3; display: flex; align-items: flex-start; gap: 2px; pointer-events: none; opacity: 0; transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1), opacity 0.3s; }
-.courier.on { opacity: 1; }
-.courier.ghost { opacity: 0.35; }
+/* Fig. 2: the terminal */
+code, pre, .cmds dt { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+code { font-size: 0.9em; color: var(--white); }
+h3 { margin: 0 0 10px; font-size: 21px; line-height: 1.2; font-weight: 700; font-variation-settings: "wdth" 112; letter-spacing: -0.01em; }
+.term { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(28px, 4vw, 64px) clamp(28px, 5vw, 80px); align-items: start; padding: clamp(72px, 12vh, 150px) var(--pad); border-top: 1px solid var(--line); }
+.term-head, .cmds { grid-column: 1 / -1; }
+.term-head h2 { font-size: clamp(30px, 3.9vw, 60px); max-width: 22ch; }
+.term-head p { color: var(--dim); max-width: 70ch; margin: 0; }
+.term-notes { display: grid; gap: 26px; }
+.term-notes div { border-top: 1px solid var(--line); padding-top: 18px; }
+.term-notes p { margin: 0; color: var(--dim); font-size: 16px; }
+.twoways { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 10px; }
+.pane { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 0 14px 14px; background: #050505; min-height: 440px; }
+.st { font-size: 13px; font-variation-settings: "wdth" 78; color: var(--dim); padding: 9px 0; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.pane.tty { border-color: rgba(57, 255, 20, 0.4); }
+.pane.tty .st { color: var(--neon); }
+#tty { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--dim); white-space: pre-wrap; overflow-wrap: anywhere; }
+#tty .cmd { color: var(--white); }
+#tty .cmd::before { content: "$ "; color: var(--neon); }
+#tty .ok { color: var(--neon); }
+#tty .id { color: var(--white); }
+#tty .caret { display: inline-block; width: 7px; height: 14px; vertical-align: -2px; background: var(--neon); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.mock { font-size: 14px; color: var(--dim); }
+.mock strong { display: block; color: var(--white); font-size: 22px; font-variation-settings: "wdth" 112; margin-bottom: 2px; }
+.mock p { margin: 0 0 16px; }
+.mock .row { margin-bottom: 12px; border-radius: 5px; outline: 1px solid transparent; outline-offset: 5px; transition: outline-color 0.2s; }
+.mock .row > span { display: block; font-size: 12.5px; margin-bottom: 4px; }
+.mock .field { border: 1px solid var(--faint); border-radius: 5px; padding: 7px 10px; color: var(--white); min-height: 36px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mock .field i { font-style: normal; color: var(--faint); }
+.mock .check { display: flex; align-items: center; gap: 9px; }
+.mock .check > span { margin: 0; font-size: 14px; }
+.mock .box { width: 16px; height: 16px; border: 1px solid var(--faint); border-radius: 3px; flex: none; }
+.mock .box.on { background: var(--neon); border-color: var(--neon); }
+.mock .btn { display: inline-block; margin-top: 4px; background: var(--white); color: var(--black); font-weight: 700; border-radius: 5px; padding: 8px 16px; outline: 1px solid transparent; outline-offset: 5px; transition: outline-color 0.2s; }
+.mock .acting { outline-color: var(--neon); }
+.mock .thanks { margin: 16px 0 0; color: var(--white); }
+.pointer { position: absolute; left: 0; top: 0; z-index: 3; display: flex; align-items: flex-start; gap: 2px; pointer-events: none; opacity: 0; transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.35, 1), opacity 0.3s; }
+.pointer.on { opacity: 1; }
+.cmds { border-top: 1px solid var(--line); padding-top: clamp(24px, 4vw, 44px); }
+.cmds > h3 { font-size: clamp(24px, 2.6vw, 36px); font-weight: 800; font-variation-settings: "wdth" 120; letter-spacing: -0.02em; margin-bottom: 18px; }
+.cmd-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(28px, 5vw, 80px); }
+.cmds h4 { margin: 22px 0 0; padding-bottom: 8px; font-size: 14px; font-weight: 600; font-variation-settings: "wdth" 80; color: var(--neon); }
+.cmds dl { margin: 0; }
+.cmds dl div { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 12fr); gap: 16px; padding: 10px 0; border-top: 1px solid var(--line); }
+.cmds dt { font-size: 13.5px; color: var(--white); overflow-wrap: anywhere; }
+.cmds dd { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.4; }
+.cmd-note { margin: 22px 0 0; padding: 12px 14px; border-left: 2px solid var(--neon); background: var(--neon-wash); font-size: 15px; }
 
 /* Fig. 3: the loop */
 .loop { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); }
@@ -173,7 +206,7 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10
 
 /* ---- Small screens ---- */
 @media (max-width: 900px) {
-  .point, .point.flip, .install { grid-template-columns: minmax(0, 1fr); }
+  .point, .point.flip, .install, .term, .cmd-groups { grid-template-columns: minmax(0, 1fr); }
   .point.flip .copy { order: 0; }
   .copy { position: static; }
   .loopgrid { grid-template-columns: minmax(0, 1fr); }
@@ -184,7 +217,11 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10
   .hero-cap { position: relative; right: auto; top: auto; text-align: left; margin-top: 18px; }
 }
 @media (max-width: 620px) {
-  .top nav a:not(.get) { display: none; }
+  .top nav a:not(.get):not(.login) { display: none; }
+  .twoways { grid-template-columns: minmax(0, 1fr); }
+  .pane { min-height: 0; }
+  .pane.tty { min-height: 300px; }
+  .cmds dl div { grid-template-columns: minmax(0, 1fr); gap: 3px; }
   h1 { font-variation-settings: "wdth" 100; animation: none; }
   .wins { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .win { min-height: 190px; }
@@ -195,7 +232,8 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   h1 { animation: none; }
-  .agent, .courier, #runner, .ring .arc, .download { transition: none; }
+  .agent, .pointer, #runner, .ring .arc, .download { transition: none; }
+  #tty .caret { animation: none; }
   .trace i { animation: none; }
 }
 @media (max-width: 620px) { .agent span { max-width: 128px; overflow: hidden; text-overflow: ellipsis; } }

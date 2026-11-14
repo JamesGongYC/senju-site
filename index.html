@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Senju 千手: a thousand hands on your desktop</title>
-<meta name="description" content="Senju is a swarm of computer-use agents for the Mac. Each agent has a cursor you can watch, interrupt and redirect. Sessions span teammates' computers, and every job leaves a skill behind.">
+<meta name="description" content="Senju is a swarm of computer-use agents for the Mac. Each agent has a cursor you can watch, interrupt and redirect. It runs a text-only coding model through a terminal built for the screen, and every job leaves a skill behind.">
 <meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Senju 千手: a thousand hands on your desktop">
@@ -24,8 +24,9 @@
   </a>
   <nav aria-label="Sections">
     <a href="#swarm">Swarm</a>
-    <a href="#multiplayer">Multiplayer</a>
+    <a href="#terminal">Terminal</a>
     <a href="#loop">Self-improvement</a>
+    <a class="login" href="https://senju-hub.fly.dev">Log in</a>
     <a class="get" href="#install">Download</a>
   </nav>
 </header>
@@ -80,43 +81,95 @@
     </figure>
   </section>
 
-  <section class="point flip" id="multiplayer">
-    <div class="copy">
-      <h2>One swarm, several desks.</h2>
-      <p>In a team, one agent can read something on your Mac and write it on a teammate's. While it rests, its cursor is docked on every screen. When someone calls it, it goes to that screen and leaves the others.</p>
-      <ul>
-        <li>Nobody's Mac is used until its owner allows it, each session.</li>
-        <li>Everyone can talk to the lead. Every message carries a name.</li>
-        <li>A request at someone's computer is shown to that person only.</li>
-        <li>What the team learns is remembered with who it came from.</li>
-      </ul>
+  <section class="term" id="terminal">
+    <div class="term-head">
+      <h2>Repurposing a text-only coding agent model for computer use.</h2>
+      <p>Senju runs on Ripple, a model trained to write code in a terminal. It reads text and writes shell commands, and it cannot take an image. Computer-use agents normally work from screenshots, so Senju does not ask Ripple to be one. Each worker gets a terminal with one program in it, <code>senju</code>, and the screen arrives as text.</p>
     </div>
-    <figure class="fig" id="fig-multi">
-      <div class="screens">
-        <div class="screen" data-screen="you">
-          <div class="st">Your Mac</div>
-          <div class="sbody"><div class="note" data-note="you"></div></div>
-          <div class="dock"><span class="docked" data-docked="you"></span></div>
-          <button type="button" data-call="you">Call Courier here</button>
-        </div>
-        <div class="screen" data-screen="mina">
-          <div class="st">Mina's Mac</div>
-          <div class="sbody">
-            <div class="consent" id="consent">
-              <b>You asked to use this Mac</b>
-              <span>Copy the meeting notes into the team doc</span>
-              <div><button type="button" data-consent="allow">Allow</button><button type="button" data-consent="watch">Just watch</button></div>
-            </div>
-            <div class="note" data-note="mina"></div>
+
+    <figure class="fig" id="fig-term">
+      <div class="twoways">
+        <div class="pane page" id="term-page">
+          <div class="st">What a person sees</div>
+          <div class="mock" aria-hidden="true">
+            <strong>Signup</strong>
+            <p>Fill in the form below.</p>
+            <div class="row" data-el="e1"><span>Email</span><div class="field" id="mock-email"><i>you@example.com</i></div></div>
+            <div class="row check" data-el="e2"><div class="box" id="mock-box"></div><span>Agree to terms</span></div>
+            <div class="row" data-el="e3"><span>Plan</span><div class="field">Free</div></div>
+            <div class="btn" data-el="e4" id="mock-btn">Submit</div>
+            <p class="thanks" id="mock-thanks" hidden></p>
           </div>
-          <div class="dock"><span class="docked" data-docked="mina"></span></div>
-          <button type="button" data-call="mina" disabled>Call Courier here</button>
+          <div class="pointer" id="term-pointer" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Worker</span></div>
         </div>
-        <div class="courier" id="courier" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div>
+        <div class="pane tty">
+          <div class="st">What Ripple sees</div>
+          <pre id="tty" aria-live="polite"></pre>
+        </div>
       </div>
-      <p class="lead-line" id="multi-line" aria-live="polite"><b>Lead</b> <span>Waiting for Mina. Answer the card on her screen for her.</span></p>
-      <figcaption class="figcap"><b>Fig. 2</b> Consent, docking and calling, as two teammates see them.</figcaption>
+      <div class="controls" role="group" aria-label="Step through the terminal">
+        <button type="button" id="term-next">Run senju look</button>
+        <button type="button" id="term-reset" class="quiet">Start over</button>
+      </div>
+      <p class="lead-line" id="term-line"><b>Shell</b> <span>The worker has not looked at the page yet. Run the first command.</span></p>
+      <figcaption class="figcap"><b>Fig. 2</b> One page, read two ways. The listing follows the format of <code>senju look</code>.</figcaption>
     </figure>
+
+    <div class="term-notes">
+      <div>
+        <h3>One tool, used like a terminal</h3>
+        <p>A worker has a single tool, <code>sh</code>. Each line is one <code>senju</code> command. Lines run in order and stop at the first error, and Ripple can chain them with <code>&amp;&amp;</code> as it would in a real shell. Every reply starts with <code>ok</code> or <code>error</code>, and an error says what to run next.</p>
+      </div>
+      <div>
+        <h3>The accessibility tree is the screen</h3>
+        <p><code>senju look</code> reads the browser's accessibility tree, the structure a screen reader uses, and prints it as a short listing: the controls first, each with an id such as <code>e12</code>, then the page's text. An id stays with its element for as long as the element is on the page. A look is capped at 6,000 characters. After every action the shell prints only what changed, so the model sees the effect without looking again.</p>
+      </div>
+      <div>
+        <h3>OCR for what the tree leaves out</h3>
+        <p>The tree holds only what a page declares. Words painted into a canvas, a chart or an image are missing from it. OCR is the second reader for those surfaces: it lifts the words out of the pixels and adds them to the same listing, so Ripple still never receives an image. Between the two readers, a model that has never seen a screenshot can read anything a person can.</p>
+      </div>
+    </div>
+
+    <div class="cmds">
+      <h3>The commands</h3>
+      <div class="cmd-groups">
+        <div>
+          <h4>See</h4>
+          <dl>
+            <div><dt>senju look [--full]</dt><dd>What is on screen now: the page, its controls with ids, then its text.</dd></div>
+          </dl>
+          <h4>Act</h4>
+          <dl>
+            <div><dt>senju click &lt;id or "label"&gt;</dt><dd>Click a control by id, or by the label a person would read.</dd></div>
+            <div><dt>senju type &lt;id&gt; "text" [--submit]</dt><dd>Replace the text in a field. <code>--submit</code> presses Enter after.</dd></div>
+            <div><dt>senju select &lt;id&gt; "option"</dt><dd>Pick an option in a dropdown.</dd></div>
+            <div><dt>senju key &lt;combo&gt;</dt><dd>Press keys: <code>enter</code>, <code>tab</code>, <code>cmd+a</code>.</dd></div>
+          </dl>
+          <h4>Go</h4>
+          <dl>
+            <div><dt>senju search "words"</dt><dd>Search the web. A guessed address that does not exist turns into a search too.</dd></div>
+            <div><dt>senju open &lt;url or app&gt;</dt><dd>Go to a page whose exact address is known.</dd></div>
+            <div><dt>senju back</dt><dd>Go back one page.</dd></div>
+          </dl>
+        </div>
+        <div>
+          <h4>Work as a swarm</h4>
+          <dl>
+            <div><dt>senju board post "note"</dt><dd>Share a finding with the other workers.</dd></div>
+            <div><dt>senju board read</dt><dd>Read what the others have posted.</dd></div>
+            <div><dt>senju wait &lt;worker&gt;</dt><dd>Block until that worker reports.</dd></div>
+            <div><dt>senju wait &lt;duration&gt;</dt><dd>Pause for up to 30 seconds while a page settles.</dd></div>
+          </dl>
+          <h4>Talk to the person</h4>
+          <dl>
+            <div><dt>senju ask "question"</dt><dd>Ask the person and wait for the answer.</dd></div>
+            <div><dt>senju done "report"</dt><dd>Finish the subtask with a short report.</dd></div>
+            <div><dt>senju help</dt><dd>List the commands.</dd></div>
+          </dl>
+          <p class="cmd-note">Anything that sends, pays or deletes stops for a person's approval before it runs. The same command with the same result three times in a row is refused, so a worker cannot loop.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="loop" id="loop">
