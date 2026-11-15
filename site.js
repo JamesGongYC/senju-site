@@ -15,7 +15,7 @@ const rand = (a, b) => a + Math.random() * (b - a);
 
   // One small cursor drawn once, then stamped a thousand times.
   function sprite(color) {
-    const c = document.createElement('canvas'), s = 14 * dpr;
+    const c = document.createElement('canvas'), s = 12 * dpr;
     c.width = c.height = s;
     const x = c.getContext('2d');
     x.scale(s / 24, s / 24);
@@ -33,7 +33,7 @@ const rand = (a, b) => a + Math.random() * (b - a);
     x.fillStyle = '#fff';
     draw(x, w, h);
     const data = x.getImageData(0, 0, w, h).data, pts = [];
-    for (let py = 0; py < h; py += 3) for (let px = 0; px < w; px += 3) if (data[(py * w + px) * 4 + 3] > 128) pts.push([px / w, py / h]);
+    for (let py = 0; py < h; py += 2) for (let px = 0; px < w; px += 2) if (data[(py * w + px) * 4 + 3] > 128) pts.push([px / w, py / h]);
     for (let i = pts.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [pts[i], pts[j]] = [pts[j], pts[i]]; }
     const out = [];
     for (let i = 0; i < count; i++) { const p = pts[i % pts.length] ?? [0.5, 0.5]; out.push([p[0] + rand(-0.004, 0.004), p[1] + rand(-0.006, 0.006)]); }
@@ -65,13 +65,13 @@ const rand = (a, b) => a + Math.random() * (b - a);
     W = hero.clientWidth; H = hero.clientHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     orange = sprite(ORANGE); ink = sprite(INK);
-    const want = W > 900 ? 1000 : W > 560 ? 640 : 420;
+    const want = W > 900 ? 3200 : W > 560 ? 2000 : 1300;
     if (want !== N) {
       N = want;
       P = Array.from({ length: N }, (_, i) => {
         const edge = Math.random() * 4 | 0;   // fly in from the edges
         const x = edge === 0 ? -40 : edge === 1 ? W + 40 : rand(0, W), y = edge === 2 ? -40 : edge === 3 ? H + 40 : rand(0, H);
-        return { x, y, vx: 0, vy: 0, tx: x, ty: y, k: rand(0.012, 0.03), ph: rand(0, 6.28), ink: i % 17 === 0, delay: rand(0, 900) };
+        return { x, y, vx: 0, vy: 0, tx: x, ty: y, k: rand(0.012, 0.03), ph: rand(0, 6.28), ink: i % 23 === 0, delay: rand(0, 900) };
       });
     }
     aim();
