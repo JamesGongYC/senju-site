@@ -2,7 +2,7 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const NEON = '#39FF14';
+const ORANGE = '#F42902', INK = '#141414';
 const ARROW = 'M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z';
 const rand = (a, b) => a + Math.random() * (b - a);
 
@@ -23,7 +23,7 @@ const rand = (a, b) => a + Math.random() * (b - a);
     x.fill(new Path2D(ARROW));
     return c;
   }
-  let green, white;
+  let orange, ink;
 
   // Points inside a shape, found by drawing it small and reading the pixels back.
   function sample(draw, count) {
@@ -44,10 +44,10 @@ const rand = (a, b) => a + Math.random() * (b - a);
     (x, w, h) => { x.translate(w / 2 - h * 0.36, h * 0.04); x.scale(h / 21, h / 21); x.fill(new Path2D('M0 0 L0 17 L4.6 12.9 L7.6 19.6 L10.3 18.4 L7.3 11.9 L13 11.9 Z')); },
     (x, w, h) => {
       // Size the word to the box, whatever the font's width turns out to be.
-      const face = 'Archivo, "Helvetica Neue", Arial, sans-serif';
-      x.font = `900 100px ${face}`;
+      const face = '"Archivo Black", "Arial Black", "Helvetica Neue", Arial, sans-serif';
+      x.font = `400 100px ${face}`;
       const size = Math.min(h * 0.62, (100 * w * 0.94) / x.measureText('SENJU').width);
-      x.font = `900 ${size}px ${face}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('SENJU', w / 2, h * 0.52);
+      x.font = `400 ${size}px ${face}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('SENJU', w / 2, h * 0.52);
     },
   ];
 
@@ -64,14 +64,14 @@ const rand = (a, b) => a + Math.random() * (b - a);
     dpr = Math.min(devicePixelRatio || 1, 2);
     W = hero.clientWidth; H = hero.clientHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
-    green = sprite(NEON); white = sprite('#fff');
+    orange = sprite(ORANGE); ink = sprite(INK);
     const want = W > 900 ? 1000 : W > 560 ? 640 : 420;
     if (want !== N) {
       N = want;
       P = Array.from({ length: N }, (_, i) => {
         const edge = Math.random() * 4 | 0;   // fly in from the edges
         const x = edge === 0 ? -40 : edge === 1 ? W + 40 : rand(0, W), y = edge === 2 ? -40 : edge === 3 ? H + 40 : rand(0, H);
-        return { x, y, vx: 0, vy: 0, tx: x, ty: y, k: rand(0.012, 0.03), ph: rand(0, 6.28), white: i % 17 === 0, delay: rand(0, 900) };
+        return { x, y, vx: 0, vy: 0, tx: x, ty: y, k: rand(0.012, 0.03), ph: rand(0, 6.28), ink: i % 17 === 0, delay: rand(0, 900) };
       });
     }
     aim();
@@ -80,7 +80,7 @@ const rand = (a, b) => a + Math.random() * (b - a);
   function draw() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const p of P) ctx.drawImage(p.white ? white : green, (p.x * dpr) | 0, (p.y * dpr) | 0);
+    for (const p of P) ctx.drawImage(p.ink ? ink : orange, (p.x * dpr) | 0, (p.y * dpr) | 0);
   }
   function tick(now) {
     if (!running) return;
@@ -221,87 +221,66 @@ const rand = (a, b) => a + Math.random() * (b - a);
   reset();
 })();
 
-// ---- Fig. 2: one page, read by a person and by a text-only model ----
-(function terminal() {
-  const tty = $('#tty'), next = $('#term-next'), line = $('#term-line span'), page = $('#term-page'), pointer = $('#term-pointer');
-  if (!tty) return;
-  const email = $('#mock-email'), box = $('#mock-box'), btn = $('#mock-btn'), thanks = $('#mock-thanks');
-  const ADDRESS = 'ada@example.com';
-  const steps = [
-    {
-      cmd: 'senju look',
-      out: ['ok', 'page: Signup', 'url: https://example.com/signup', '-- elements (4)', 'e1 textbox "Email" = "" (placeholder "you@example.com")', 'e2 checkbox "Agree to terms" [unchecked]', 'e3 combobox "Plan" = "Free"', 'e4 button "Submit"', '-- text (2)', '# Signup', 'Fill in the form below.'],
-      say: 'The accessibility tree, as text: four controls with ids, then two lines of page text. No pixels were read.',
-    },
-    {
-      cmd: `senju type e1 "${ADDRESS}"`, el: 'e1',
-      act: () => { email.textContent = ADDRESS; },
-      out: ['ok', `~ e1 textbox "Email": value "" -> "${ADDRESS}"`],
-      say: 'The reply is only what changed. The worker knows the text landed without looking again.',
-    },
-    {
-      cmd: 'senju click "Agree to terms"', el: 'e2',
-      act: () => box.classList.add('on'),
-      out: ['ok', '~ e2 checkbox "Agree to terms": flags [unchecked] -> [checked]'],
-      say: 'A control can be named by its label, the way a person would point at it. The shell finds the id.',
-    },
-    {
-      cmd: 'senju click e4', el: 'e4',
-      act: () => { thanks.hidden = false; thanks.textContent = `Thanks, ${ADDRESS}`; btn.textContent = 'Start over'; },
-      out: ['ok', '- e4 button "Submit"', '+ e5 button "Start over"', `+ text: Thanks, ${ADDRESS}`],
-      say: 'The button was replaced, so it gets a new id. An id is never reused for a different control.',
-    },
-  ];
-  let at = 0, busy = false, run = 0;
-  const wait = (ms) => new Promise((r) => setTimeout(r, still ? 0 : ms));
-  const label = () => { next.textContent = at < steps.length ? `Run ${steps[at].cmd.split(' ').slice(0, 2).join(' ')}` : 'Done'; next.disabled = busy || at >= steps.length; };
-  const colour = (text) => {
-    const row = document.createElement('span');
-    if (text === 'ok') row.className = 'ok';
-    const m = text.match(/^([~+-] )?(e\d+)( .*)$/);
-    if (m) { row.append(m[1] ?? ''); const id = document.createElement('span'); id.className = 'id'; id.textContent = m[2]; row.append(id, m[3]); }
-    else row.textContent = text;
-    row.append('\n');
-    return row;
-  };
-  function pointTo(el) {
-    const target = $(`[data-el="${el}"]`, page);
-    if (!target) return;
-    $$('.acting', page).forEach((n) => n.classList.remove('acting'));
-    target.classList.add('acting');
-    const a = page.getBoundingClientRect(), b = target.getBoundingClientRect();
-    pointer.classList.add('on');
-    pointer.style.transform = `translate(${Math.round(b.left - a.left + Math.min(b.width * 0.5, 90))}px, ${Math.round(b.top - a.top + b.height * 0.6)}px)`;
+// ---- Fig. 2: one agent, two desks ----
+(function multi() {
+  const fig = $('#fig-multi'), courier = $('#courier'), line = $('#multi-line span'), consent = $('#consent');
+  const screens = { you: $('[data-screen="you"]', fig), mina: $('[data-screen="mina"]', fig) };
+  const names = { you: 'your Mac', mina: "Mina's Mac" };
+  let shared = false, at = null, hop = null;
+  const note = (who, html) => { $(`[data-note="${who}"]`, fig).innerHTML = html; };
+  const docked = (who, text) => { $(`[data-docked="${who}"]`, fig).textContent = text; };
+
+  function moveTo(who, resting) {
+    const s = screens[who].getBoundingClientRect(), f = $('.screens', fig).getBoundingClientRect();
+    const x = s.left - f.left + (resting ? s.width / 2 - 34 : rand(18, s.width - 110));
+    const y = resting ? $('.dock', screens[who]).getBoundingClientRect().top - f.top + 6 : s.top - f.top + rand(60, s.height - 150);
+    courier.style.transform = `translate(${x}px, ${y}px)`;
   }
-  async function step() {
-    if (busy || at >= steps.length) return;
-    busy = true; label();
-    const mine = run, s = steps[at];
-    const cmd = document.createElement('span'); cmd.className = 'cmd';
-    const caret = document.createElement('span'); caret.className = 'caret';
-    if (at > 0) tty.append('\n');
-    tty.append(cmd, caret);
-    for (const ch of s.cmd) { if (mine !== run) return; cmd.append(ch); await wait(18); }
-    if (s.el) { pointTo(s.el); await wait(480); }
-    if (mine !== run) return;
-    s.act?.();
-    caret.remove(); cmd.append('\n');
-    for (const text of s.out) { if (mine !== run) return; tty.append(colour(text)); await wait(45); }
-    line.textContent = s.say;
-    at += 1; busy = false; label();
+  function render() {
+    clearInterval(hop);
+    for (const who of ['you', 'mina']) screens[who].classList.toggle('live', at === who);
+    if (at) {
+      const other = at === 'you' ? 'mina' : 'you';
+      courier.className = 'courier on';
+      moveTo(at, false);
+      if (!still) hop = setInterval(() => moveTo(at, false), 1900);
+      docked(at, '');
+      docked(other, shared || other === 'you' ? `Courier is on ${names[at]}` : '');
+      note(at, at === 'mina' ? '<b>Courier</b> is reading the meeting notes here.' : '<b>Courier</b> is writing into the team doc here.');
+      if (other === 'you' || shared) note(other, at === 'mina' ? 'Courier left this screen when Mina called it.' : 'Courier left this screen when you called it.');
+      line.textContent = at === 'mina' ? 'Courier is on Mina’s Mac, reading. It is gone from yours until someone calls it back.' : 'Courier is on your Mac, writing. Mina sees where it went, not what is on your screen.';
+    } else {
+      courier.className = 'courier on ghost';
+      moveTo('you', true);
+      docked('you', ''); docked('mina', shared ? 'Courier is docked here too' : '');
+      note('you', 'Courier is resting. Its cursor is docked on every screen in the session.');
+    }
   }
-  function reset() {
-    run += 1; at = 0; busy = false;
-    tty.textContent = '';
-    email.innerHTML = '<i>you@example.com</i>'; box.classList.remove('on'); btn.textContent = 'Submit'; thanks.hidden = true;
-    $$('.acting', page).forEach((n) => n.classList.remove('acting'));
-    pointer.classList.remove('on');
-    line.textContent = 'The worker has not looked at the page yet. Run the first command.';
-    label();
-  }
-  next.addEventListener('click', step);
-  $('#term-reset').addEventListener('click', reset);
-  label();
+  consent.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    consent.hidden = true;
+    if (b.dataset.consent === 'allow') {
+      shared = true;
+      $('[data-call="mina"]', fig).disabled = false;
+      note('mina', 'Mina allowed this Mac for this session only.');
+      line.textContent = 'Mina joined and shared her Mac. Courier is docked on both screens. Call it to either one.';
+    } else {
+      note('mina', 'Mina is following the session and can talk to the lead. Her Mac is not shared. <button type="button" data-share>Share it after all</button>');
+      line.textContent = 'Mina is watching. I will not plan on her Mac.';
+    }
+    render();
+  });
+  fig.addEventListener('click', (e) => {
+    if (e.target.closest('[data-share]')) { shared = true; $('[data-call="mina"]', fig).disabled = false; note('mina', 'Mina allowed this Mac for this session only.'); line.textContent = 'Mina shared her Mac. Call Courier to either screen.'; return render(); }
+    const b = e.target.closest('[data-call]'); if (!b || b.disabled) return;
+    at = at === b.dataset.call ? null : b.dataset.call;
+    for (const who of ['you', 'mina']) $(`[data-call="${who}"]`, fig).textContent = at === who ? 'Send Courier back to the dock' : 'Call Courier here';
+    if (!at) line.textContent = 'Courier is resting again, docked on every screen.';
+    render();
+  });
+  addEventListener('resize', () => render());
+  render();
+  line.textContent = 'Waiting for Mina. Answer the card on her screen for her.';
 })();
 
 // ---- Fig. 3: run, report, retrospective, skill, and round again ----
@@ -346,46 +325,4 @@ const rand = (a, b) => a + Math.random() * (b - a);
   }
   btn.addEventListener('click', run);
   phase(-1);
-})();
-
-// ---- Fig. 4: autoresearch. One generation per click: six runs, a score, keep or revert ----
-(function research() {
-  const gens = $('#gens'), btn = $('#gen-run'), champ = $('#champ'), line = $('#gen-line span');
-  if (!gens) return;
-  // Illustrative, not measured. runs: 1 = passed. kind: train generations, or a check on variants nobody trained on.
-  const GENS = [
-    { runs: '010000', score: '0.35', verdict: 'baseline', change: 'Empty skill.', say: 'Most runs stop at the same milestone: the receipt totals are never read. Next change: a step that says to read them first.' },
-    { runs: '101100', score: '0.58', verdict: 'keep', change: 'Read every receipt total before filling the form.', say: 'Score up, so the change stays and this generation is the new champion. The failures now quit before the last page.' },
-    { runs: '100100', score: '0.52', verdict: 'revert', change: 'Ask for approval after each line.', say: 'Score down. The skill is restored from the champion, and the idea is logged so it is not tried again.' },
-    { runs: '111101', score: '0.86', verdict: 'keep', change: 'Add one shortened winning run as an example.', say: 'Five of six passed, which earns a check on variants the researcher has never read.' },
-    { check: true, runs: '111110', verdict: 'ready', change: 'Unseen variants, first check.', say: 'Ready once. A second ready check in a row is needed before the skill ships.' },
-    { check: true, runs: '111111', verdict: 'ready', change: 'Unseen variants, second check.', say: 'Ready twice in a row. The skill is exported into the app as expense-report.md.' },
-  ];
-  let n = 0, g = 0, busy = false;
-  const wait = (ms) => new Promise((r) => setTimeout(r, still ? Math.min(ms, 40) : ms));
-  async function run() {
-    if (busy) return;
-    busy = true; btn.disabled = true;
-    if (n === GENS.length) { n = 0; g = 0; gens.innerHTML = ''; champ.textContent = 'no champion yet'; }
-    const s = GENS[n];
-    const row = document.createElement('div');
-    row.className = 'gen' + (s.check ? ' check' : '');
-    row.innerHTML = `<b>${s.check ? 'test' : 'g' + g}</b><div class="runs6"></div>${s.check ? '' : '<span class="score"></span>'}<span class="change"></span><span class="verdict">running</span>`;
-    $('.change', row).textContent = s.change;
-    gens.append(row);
-    for (const c of s.runs) { const i = document.createElement('i'); if (c === '1') i.className = 'pass'; $('.runs6', row).append(i); await wait(170); }
-    await wait(250);
-    if (!s.check) $('.score', row).textContent = s.score;
-    $('.verdict', row).textContent = s.verdict;
-    if (s.verdict === 'keep' || s.verdict === 'ready') row.classList.add('kept');
-    if (s.verdict === 'revert') row.classList.add('reverted');
-    if (s.verdict === 'keep' || s.verdict === 'baseline') champ.textContent = `champion: g${g}, score ${s.score}`;
-    if (n === GENS.length - 1) champ.textContent = 'ready, exported to the app';
-    line.textContent = s.say;
-    if (!s.check) g++;
-    n++;
-    btn.textContent = n === GENS.length ? 'Clear and start over' : GENS[n].check ? 'Check on unseen variants' : 'Run the next generation';
-    busy = false; btn.disabled = false;
-  }
-  btn.addEventListener('click', run);
 })();

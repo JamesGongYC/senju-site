@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Senju 千手: a thousand hands on your desktop</title>
+<meta name="description" content="Senju is a swarm of computer-use agents for the Mac. Each agent has a cursor you can watch, interrupt and redirect. Sessions span teammates' computers, and every job leaves a skill behind.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Senju 千手: a thousand hands on your desktop">
+<meta property="og:description" content="A computer-use agent swarm for the Mac. Each agent has its own cursor, working in your team's real apps while you keep working in yours.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#" aria-label="Senju, home">
+    <svg viewBox="0 0 240 240" width="30" height="30" aria-hidden="true"><use href="#mark"/></svg>
+    <span>Senju <span class="hanzi" lang="zh-Hans" aria-hidden="true">千手</span></span>
+  </a>
+  <nav aria-label="Sections">
+    <a href="#swarm">Swarm</a>
+    <a href="#multiplayer">Multiplayer</a>
+    <a href="#loop">Self-improvement</a>
+    <a class="login" href="https://senju-hub.fly.dev">Log in</a>
+    <a class="get" href="https://github.com/JamesGongYC/senju">Download</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="you-tag" id="you-tag" aria-hidden="true">you</div>
+    <div class="hero-copy">
+      <h1><span>A thousand hands</span> <span>on your desktop.</span></h1>
+      <p class="abstract">Senju is a computer-use agent swarm for the Mac. Each agent has its own cursor, working in your team’s real apps while you keep working in yours.</p>
+      <div class="cta">
+        <a class="download" href="https://github.com/JamesGongYC/senju">Download for Mac</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="point" id="swarm">
+    <div class="copy">
+      <h2>A swarm you can interrupt.</h2>
+      <p>Most computer-use agents run out of sight and hand back a result. Senju's agents work in front of you, in your own browser and Mac apps, and they stay answerable the whole time.</p>
+      <ul>
+        <li>Write to the lead or to any worker while it works. It replans.</li>
+        <li>Pause an agent, take over its window, hand it back.</li>
+        <li>Sign-ins and anything sent in your name wait for your click.</li>
+      </ul>
+    </div>
+    <figure class="fig" id="fig-swarm">
+      <div class="desk" id="desk">
+        <div class="promptbar"><i></i><span>Compare three laptops, draft the email, file the notes</span></div>
+        <div class="wins">
+          <div class="win" data-win="chrome"><div class="wt">Chrome</div><div class="lines"><s></s><s></s><s></s><s></s></div></div>
+          <div class="win" data-win="word"><div class="wt">Word</div><div class="lines"><s></s><s></s><s></s></div></div>
+          <div class="win" data-win="slack"><div class="wt">Slack</div><div class="lines"><s></s><s></s></div>
+            <div class="ask" id="ask" hidden>
+              <b>Courier needs you</b>
+              <span>Send this draft to the team channel?</span>
+              <div><button type="button" data-ask="send">Send</button><button type="button" data-ask="hold">Not yet</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="agents" id="agents" aria-hidden="true"></div>
+      </div>
+      <div class="controls" role="group" aria-label="Try the swarm">
+        <button type="button" data-act="pause" aria-pressed="false">Pause Writer</button>
+        <button type="button" data-act="skip">Tell the lead: skip the email</button>
+        <button type="button" data-act="add">Tell the lead: check prices too</button>
+        <button type="button" data-act="reset" class="quiet">Start over</button>
+      </div>
+      <p class="lead-line" id="lead-line" aria-live="polite"><b>Lead</b> <span>Three workers running. Rest your pointer on a window and the agent in it waits for you.</span></p>
+      <figcaption class="figcap"><b>Fig. 1</b> A working model of a session. Every control here exists in the app.</figcaption>
+    </figure>
+  </section>
+
+  <section class="point flip" id="multiplayer">
+    <div class="copy">
+      <h2>One swarm, several desks.</h2>
+      <p>In a team, one agent can read something on your Mac and write it on a teammate's. While it rests, its cursor is docked on every screen. When someone calls it, it goes to that screen and leaves the others.</p>
+      <ul>
+        <li>Nobody's Mac is used until its owner allows it, each session.</li>
+        <li>Everyone can talk to the lead. Every message carries a name.</li>
+        <li>A request at someone's computer is shown to that person only.</li>
+        <li>What the team learns is remembered with who it came from.</li>
+      </ul>
+    </div>
+    <figure class="fig" id="fig-multi">
+      <div class="screens">
+        <div class="screen" data-screen="you">
+          <div class="st">Your Mac</div>
+          <div class="sbody"><div class="note" data-note="you"></div></div>
+          <div class="dock"><span class="docked" data-docked="you"></span></div>
+          <button type="button" data-call="you">Call Courier here</button>
+        </div>
+        <div class="screen" data-screen="mina">
+          <div class="st">Mina's Mac</div>
+          <div class="sbody">
+            <div class="consent" id="consent">
+              <b>You asked to use this Mac</b>
+              <span>Copy the meeting notes into the team doc</span>
+              <div><button type="button" data-consent="allow">Allow</button><button type="button" data-consent="watch">Just watch</button></div>
+            </div>
+            <div class="note" data-note="mina"></div>
+          </div>
+          <div class="dock"><span class="docked" data-docked="mina"></span></div>
+          <button type="button" data-call="mina" disabled>Call Courier here</button>
+        </div>
+        <div class="courier" id="courier" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 2.5l15.5 8.2-6.6 1.9-2.6 6.6z"/></svg><span>Courier</span></div>
+      </div>
+      <p class="lead-line" id="multi-line" aria-live="polite"><b>Lead</b> <span>Waiting for Mina. Answer the card on her screen for her.</span></p>
+      <figcaption class="figcap"><b>Fig. 2</b> Consent, docking and calling, as two teammates see them.</figcaption>
+    </figure>
+  </section>
+
+  <section class="loop" id="loop">
+    <div class="copy">
+      <h2>Every job leaves a skill behind.</h2>
+      <p>When a job ends, the lead writes a short retrospective and saves what it learned as a skill: a plain Markdown file you can read, edit or delete. The next job that resembles it starts from that file. In a team, skills are shared and every revision is kept.</p>
+    </div>
+    <figure class="fig" id="fig-loop">
+      <div class="loopgrid">
+        <div class="ring" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="78" class="track"/>
+            <circle cx="100" cy="100" r="78" class="arc" id="arc"/>
+            <g id="runner"><circle cx="100" cy="22" r="7"/></g>
+          </svg>
+          <ol>
+            <li data-phase="0">Run</li>
+            <li data-phase="1">Report</li>
+            <li data-phase="2">Retrospective</li>
+            <li data-phase="3">Skill</li>
+          </ol>
+        </div>
+        <div class="runs">
+          <div class="trace" id="trace" aria-live="polite"></div>
+          <div class="skill">
+            <div class="sk-head"><span>skills/compare-and-brief.md</span><b id="rev">no revisions yet</b></div>
+            <ul id="skill-lines"></ul>
+          </div>
+          <button type="button" id="run">Run the job</button>
+        </div>
+      </div>
+      <figcaption class="figcap"><b>Fig. 3</b> The mechanism, drawn schematically. Solid marks are useful steps, hollow marks are dead ends. Not a measurement.</figcaption>
+    </figure>
+  </section>
+
+
+  <section class="install" id="install">
+    <h2>Install</h2>
+    <ol>
+      <li><b>Download the app and drag it to Applications.</b> <a href="https://github.com/JamesGongYC/senju-site/releases/latest/download/Senju-arm64.dmg">Apple silicon</a> or <a href="https://github.com/JamesGongYC/senju-site/releases/latest/download/Senju-x64.dmg">Intel</a>.</li>
+      <li><b>Open it the first time from System Settings.</b> This build is not yet notarized by Apple, so macOS stops it once. Go to Privacy &amp; Security and choose Open Anyway.</li>
+      <li><b>Add your Anthropic API key.</b> The app asks the first time you run a job. Agents run on your own key, which stays on your Mac.</li>
+      <li><b>Press Command Shift Space and say what you want done.</b> The same keys hide the bar and bring it back.</li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <span>Senju 0.1. The name is <span lang="zh-Hans">千手</span>, "a thousand hands".</span>
+  <a href="#hero">Back to the top</a>
+</footer>
+
+<!-- The mark: one cursor in front, and the tips of more cursors fanned out behind it. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 240 240"><g transform="translate(98 28) scale(9.6)"><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(-72 3.5 11)" fill="#22A00D" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(72 3.5 11)" fill="#22A00D" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(-48 3.5 11)" fill="#2ED312" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(48 3.5 11)" fill="#2ED312" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(-24 3.5 11)" fill="#39FF14" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 11.5 L7 9.6 Z" transform="rotate(24 3.5 11)" fill="#39FF14" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/><path d="M0 0 L0 17 L4.6 12.9 L7.6 19.6 L10.3 18.4 L7.3 11.9 L13 11.9 Z" fill="#fff" stroke="#000" stroke-width="0.9" stroke-linejoin="round"/></g></symbol>
+</svg>
+
+<script src="site.js"></script>
+</body>
+</html>
